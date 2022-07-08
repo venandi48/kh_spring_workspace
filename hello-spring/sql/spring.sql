@@ -30,3 +30,6 @@ create table dev (
 );
 
 create sequence seq_dev_no;
+
+
+select * from dev;

@@ -28,5 +28,45 @@
 	</select>
 	<resultMap type="dev" id="devMap">
 	</resultMap>
+	
+	<delete id="deleteDev">
+		delete from
+			dev
+		where
+			no = #{no}
+	</delete>
+	
+	<select id="selectDev" resultMap="devMap">
+		select
+			*
+		from
+			dev
+		where
+			no = #{no}
+	</select>
+	
+	<update id="updateDev">
+		update
+			dev
+		<set>
+			<if test="name != null and !''.equals(name)">
+				name = #{name},
+			</if>
+			<if test="career != null">
+				career = #{career},
+			</if>
+			<if test="email != null and !''.equals(email)">
+				email = #{email},
+			</if>
+			<if test="gender != null">
+				gender = #{gender},
+			</if>
+			<if test="lang != null">
+				lang = #{lang}
+			</if>
+		</set>
+		where
+			no = #{no}
+	</update>
 
 </mapper>

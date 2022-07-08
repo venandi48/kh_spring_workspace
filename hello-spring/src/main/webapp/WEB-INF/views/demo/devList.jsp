@@ -54,7 +54,11 @@
  */
 document.querySelectorAll(".btn-delete").forEach((btn) => {
 	btn.addEventListener('click', (e) => {
-		console.log(e.target);
+		if(confirm("정말 삭제하시겠습니까?")) {			
+			const frm = document.devDelFrm;
+			frm.no.value = e.target.dataset.devNo;
+			frm.submit();
+		};
 	});
 });
 

@@ -10,4 +10,10 @@ public interface DemoDao {
 
 	List<Dev> selectDevList();
 
+	int deleteDev(int no);
+
+	Dev selectDev(int no);
+
+	int updateDev(Dev dev);
+
 }

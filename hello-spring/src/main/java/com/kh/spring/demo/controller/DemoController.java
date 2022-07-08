@@ -120,7 +120,7 @@ public class DemoController {
 		return "demo/devResult";
 	}
 
-	@RequestMapping(value="/insertDev.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/insertDev.do", method = RequestMethod.POST)
 	public String insertDev(Dev dev, RedirectAttributes redirectAttr) {
 		log.info("dev = {}", dev);
 
@@ -136,15 +136,30 @@ public class DemoController {
 	@RequestMapping("/devList.do")
 	public String devList(Model model) {
 		List<Dev> list = demoService.selectDevList();
-		log.info("list = {}", list);
+		// log.info("list = {}", list);
 		model.addAttribute("list", list);
 		return "demo/devList";
 	}
 
 	@RequestMapping(path = "/updateDev.do", method = RequestMethod.GET)
-	public String updateDev(Model model) {
+	public String updateDev(@RequestParam int no, Model model) {
 		// 사용자입력 no값으로 dev 한 건 조회 후 view단 전달
-
+		Dev dev = demoService.selectDev(no);
+		model.addAttribute("dev", dev);
 		return "demo/devUpdateForm";
+	}
+	
+	@RequestMapping(path = "/updateDev.do", method = RequestMethod.POST)
+	public String updateDev(Dev dev, RedirectAttributes redirectAttr) {
+		int result = demoService.updateDev(dev);
+		redirectAttr.addFlashAttribute("msg", "Dev정보가 수정되었습니다.");
+		return "redirect:/demo/updateDev.do?no=" + dev.getNo();
+	}
+
+	@RequestMapping(path = "/deleteDev.do", method = RequestMethod.POST)
+	public String deleteDev(@RequestParam int no, RedirectAttributes redirectAttr) {
+		int result = demoService.deleteDev(no);
+		redirectAttr.addFlashAttribute("msg", no + "번 Dev가 삭제되었습니다.");
+		return "redirect:/demo/devList.do";
 	}
 }
