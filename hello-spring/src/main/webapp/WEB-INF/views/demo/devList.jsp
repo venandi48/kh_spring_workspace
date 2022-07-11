@@ -57,7 +57,7 @@ document.querySelectorAll(".btn-delete").forEach((btn) => {
 		if(confirm("정말 삭제하시겠습니까?")) {			
 			const frm = document.devDelFrm;
 			frm.no.value = e.target.dataset.devNo;
-			frm.submit();
+			frm.submit(); // 메소드 사용하여 호출 시 submit 이벤트핸들러 호출X
 		};
 	});
 });

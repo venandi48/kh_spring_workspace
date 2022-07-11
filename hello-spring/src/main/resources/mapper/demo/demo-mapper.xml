@@ -36,7 +36,7 @@
 			no = #{no}
 	</delete>
 	
-	<select id="selectDev" resultMap="devMap">
+	<select id="selectOneDev" resultMap="devMap">
 		select
 			*
 		from

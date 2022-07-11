@@ -30,8 +30,8 @@ public class DemoDaoImpl implements DemoDao {
 	}
 	
 	@Override
-	public Dev selectDev(int no) {
-		return sqlSession.selectOne("demo.selectDev", no);
+	public Dev selectOneDev(int no) {
+		return sqlSession.selectOne("demo.selectOneDev", no);
 	}
 	
 	@Override

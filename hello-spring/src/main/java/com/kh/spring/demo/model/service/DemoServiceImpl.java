@@ -36,8 +36,8 @@ public class DemoServiceImpl implements DemoService {
 	}
 	
 	@Override
-	public Dev selectDev(int no) {
-		return demoDao.selectDev(no);
+	public Dev selectOneDev(int no) {
+		return demoDao.selectOneDev(no);
 	}
 	
 	@Override

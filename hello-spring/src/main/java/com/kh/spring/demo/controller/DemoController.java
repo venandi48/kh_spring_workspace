@@ -144,7 +144,7 @@ public class DemoController {
 	@RequestMapping(path = "/updateDev.do", method = RequestMethod.GET)
 	public String updateDev(@RequestParam int no, Model model) {
 		// 사용자입력 no값으로 dev 한 건 조회 후 view단 전달
-		Dev dev = demoService.selectDev(no);
+		Dev dev = demoService.selectOneDev(no);
 		model.addAttribute("dev", dev);
 		return "demo/devUpdateForm";
 	}

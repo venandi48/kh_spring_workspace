@@ -12,7 +12,7 @@ public interface DemoService {
 
 	int deleteDev(int no);
 
-	Dev selectDev(int no);
+	Dev selectOneDev(int no);
 
 	int updateDev(Dev dev);
 
