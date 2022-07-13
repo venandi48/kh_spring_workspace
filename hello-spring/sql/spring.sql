@@ -62,3 +62,32 @@ commit;
 
 select * from member;
 desc member;
+
+-- todo 테이블 생성
+create table todo (
+    no number,
+    todo varchar2(4000),
+    created_at date default sysdate,
+    completed_at date,
+    constraint pk_todo_no primary key(no)
+);
+
+create sequence seq_todo_no;
+
+insert into todo values(seq_todo_no.nextval, '우산 정리하기', default, default);
+insert into todo values(seq_todo_no.nextval, '형광등 교체', default, default);
+insert into todo values(seq_todo_no.nextval, '장보기', default, default);
+insert into todo values(seq_todo_no.nextval, '에어컨 필터 청소', default, default);
+commit;
+
+-- 할일 완료
+update todo set completed_at = sysdate where no = 6;
+-- delete from todo where no= 5;
+
+select * from todo;
+
+-- 할일 오름차순, 완료목록 내림차순
+select * from (select * from todo where completed_at is null order by no)
+union all
+select * from (select * from todo where completed_at is not null order by no desc)
+;
