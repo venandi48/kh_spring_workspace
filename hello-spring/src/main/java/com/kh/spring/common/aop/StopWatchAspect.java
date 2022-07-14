@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StopWatchAspect {
 
-	@Pointcut("execution(* com.kh.spring..insertTodo(..))")
+	@Pointcut("execution(* com.kh.spring.todo..insertTodo(..))")
 	public void stopWachPointcut() {
 	}
 
@@ -27,7 +27,10 @@ public class StopWatchAspect {
 		Object returnObj = joinPoint.proceed();
 
 		stopWatch.stop();
-		log.debug("insertTodo 실행시간 = {} ", stopWatch.prettyPrint());
+		long duration = stopWatch.getTotalTimeMillis();
+		double duration2 = stopWatch.getTotalTimeSeconds(); // 초
+		log.debug("insertTodo 실행시간 = {}ms", duration); // insertTodo 실행시간 = 40ms
+		log.debug("insertTodo 실행시간 = {}s", duration2); // insertTodo 실행시간 = 0.04s
 
 		return returnObj;
 	}
