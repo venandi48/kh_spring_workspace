@@ -50,7 +50,7 @@ public class HelloSpringUtils {
 		StringBuilder pagebar = new StringBuilder();
 		url += "?cPage=";
 		int totalPage = (int) Math.ceil((double) totalContent / numPerPage);
-		int pageStart = ((cPage - 1) * pagebarSize) * pagebarSize + 1;
+		int pageStart = ((cPage - 1) / pagebarSize) * pagebarSize + 1;
 		int pageEnd = pageStart + pagebarSize - 1;
 		int pageNo = pageStart;
 		

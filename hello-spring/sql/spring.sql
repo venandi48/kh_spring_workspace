@@ -211,3 +211,14 @@ where rnum between 1 and 5;
 
 -- rowbounds 객체 이용시
 select * from board order by no desc;
+select * from attachment;
+
+
+-- board - member - attachment
+select *
+from
+    board b
+        left join member m on b.member_id = m.member_id
+        left join attachment a on b.no = a.board_no
+where b.no = 103
+order by b.no desc;

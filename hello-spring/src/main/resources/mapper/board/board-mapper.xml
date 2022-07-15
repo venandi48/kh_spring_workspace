@@ -14,20 +14,59 @@
 			no desc
 	</select>
 	
-	<!-- 
 	<insert id="insertBoard">
 		insert into
-			board
+			board (no, title, member_id, content)
 		values(
 			seq_board_no.nextval,
 			#{title},
 			#{memberId},
-			#{content},
-			default,
-			null,
-			default
+			#{content}
 		)
+		<selectKey keyProperty="no" resultType="_int" order="AFTER">
+			select
+				seq_board_no.currval
+			from
+				dual
+		</selectKey>
 	</insert>
-	 -->
+
+	<select id="selectOneBoardCollection" resultMap="boardCollectionMap">
+		select
+			b.*,
+			m.*,
+			a.no attach_no,
+			a.*
+		from
+		    board b
+		        left join member m on b.member_id = m.member_id
+		        left join attachment a on b.no = a.board_no
+		where b.no = #{no}
+		order by b.no desc
+	</select>
+	
+	<resultMap type="board" id="boardCollectionMap">
+		<id column="no" property="no"/>
+		<result column="title" property="title"/>
+		<result column="member_id" property="memberId"/>
+		<result column="content" property="content"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="updated_at" property="updatedAt"/>
+		<result column="read_count" property="readCount"/>
+		
+		<association property="member" javaType="member">
+			<id column="member_id" property="memberId"/>
+			<result column="name" property="name"/>
+			<result column="email" property="email"/>
+		</association>
+		
+		<collection property="attachments" javaType="arrayList" ofType="attachment">
+			<id column="attach_no" property="no"/>
+			<result column="original_filename" property="originalFilename"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="download_count" property="downloadCount"/>
+		</collection>
+	</resultMap>
+	
 
 </mapper>
