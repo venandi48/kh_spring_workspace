@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -140,8 +141,57 @@ public class BoardController {
 	}
 	
 	@PostMapping("/boardUpdate.do")
-	public String boardUpdate(RedirectAttributes redirectAttr) {
-		return "redirect:/board/boardDetail.do?no="; // + no; // boardNo
-	}
+    public String boardUpdate(
+            @ModelAttribute Board board,
+            @RequestParam("upFile") MultipartFile[] upFiles,
+            @RequestParam(value="delFile", required=false) int[] delFiles,
+            RedirectAttributes redirectAttr) {
+		
+        try {
+			int result = 0;
+			log.debug("board = {}", board);
+
+			// 1. 첨부파일 삭제 (파일 삭제 + table 행삭제)
+			// 복수개의 delFile처리
+			String saveDirectory = application.getRealPath("/resources/upload/board");
+			if(delFiles != null) {
+				for(int attachNo : delFiles) {
+					Attachment attach = boardService.selectOneAttachment(attachNo);
+					
+					result = boardService.deleteAttachments(attachNo);
+					
+					File delFile = new File(saveDirectory, attach.getRenamedFilename());
+					if(delFile.exists())
+						delFile.delete();
+				}
+			}
+			
+			// 2. 첨부파일 등록 (파일 저장 + Attachment객체생성 추가)
+			for(MultipartFile upFile : upFiles) {
+				if(upFile.getSize() > 0) {
+					String originalFilename = upFile.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+					// log.debug("renamedFilename = {}", renamedFilename);
+					
+					File destFile = new File(saveDirectory, renamedFilename);
+					upFile.transferTo(destFile);
+					
+					// Attachment객체 -> Board#attachments에 추가
+					Attachment attach = new Attachment();
+					attach.setOriginalFilename(originalFilename);
+					attach.setRenamedFilename(renamedFilename);
+					board.addAttachment(attach);
+				}
+			}
+			
+			// 3. 게시글 수정 (board수정 + 복수개의 attachment 등록)
+			result = boardService.updateBoard(board);
+
+		} catch (Exception e) {
+			log.error("게시글 수정 오류", e);
+		}
+        
+        return "redirect:/board/boardDetail.do?no=" + board.getNo(); // board#no
+    }
 	
 }

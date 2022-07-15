@@ -19,7 +19,8 @@ div#board-container label.custom-file-label{text-align:left;}
 		action="${pageContext.request.contextPath}/board/boardUpdate.do" 
 		method="post"
 		enctype="multipart/form-data">
-		<input type="text" class="form-control" placeholder="제목" name="title" id="title" required>
+		<input type="hidden" name="no" id="no" value="${board.no}" />
+		<input type="text" class="form-control" placeholder="제목" name="title" id="title" value="${board.title}" required>
 		<input type="text" class="form-control" name="memberId" value="${loginMember.memberId}" readonly required>
 		<!-- input:file소스 : https://getbootstrap.com/docs/4.1/components/input-group/#custom-file-input -->
 		
@@ -41,7 +42,7 @@ div#board-container label.custom-file-label{text-align:left;}
 		
 		<div class="input-group mb-3" style="padding:0px;">
 		  <div class="input-group-prepend" style="padding:0px;">
-		    <span class="input-group-text">첨부파일1</span>
+		    <span class="input-group-text">첨부파일</span>
 		  </div>
 		  <div class="custom-file">
 		    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple>
@@ -49,7 +50,7 @@ div#board-container label.custom-file-label{text-align:left;}
 		  </div>
 		</div>
 		
-	    <textarea class="form-control" name="content" placeholder="내용" required></textarea>
+	    <textarea class="form-control" name="content" placeholder="내용" required>${board.content}</textarea>
 		<br />
 		<input type="submit" class="btn btn-outline-success" value="저장" >
 	</form>

@@ -2,6 +2,7 @@ package com.kh.spring.board.model.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -32,5 +33,13 @@ public interface BoardDao {
 	List<Attachment> selectAttachmentListByBoardNo(int boardNo);
 	
 	Board selectOneBoardCollection(int no);
+
+	@Select("select * from attachment where no = #{attachNo}")
+	Attachment selectOneAttachment(int attachNo);
+
+	@Delete("delete attachment where no = #{attachNo}")
+	int deleteAttachments(int attachNo);
+
+	int updateBoard(Board board);
 
 }

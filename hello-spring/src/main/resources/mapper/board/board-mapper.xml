@@ -67,6 +67,16 @@
 			<result column="download_count" property="downloadCount"/>
 		</collection>
 	</resultMap>
-	
+
+	<update id="updateBoard">
+		update
+			board
+		set
+			title = #{title},
+			content = #{content},
+			updated_at = #{updatedAt}
+		where
+			no = #{no}
+	</update>
 
 </mapper>
