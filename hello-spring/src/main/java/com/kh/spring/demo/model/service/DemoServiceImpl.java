@@ -44,4 +44,9 @@ public class DemoServiceImpl implements DemoService {
 	public int updateDev(Dev dev) {
 		return demoDao.updateDev(dev);
 	}
+	
+	@Override
+	public Dev selectOneDevByEmail(String email) {
+		return demoDao.selectOneDevByEmail(email);
+	}
 }

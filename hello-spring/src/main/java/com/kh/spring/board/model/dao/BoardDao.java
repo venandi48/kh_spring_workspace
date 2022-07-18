@@ -38,7 +38,7 @@ public interface BoardDao {
 	Attachment selectOneAttachment(int attachNo);
 
 	@Delete("delete attachment where no = #{attachNo}")
-	int deleteAttachments(int attachNo);
+	int deleteAttachment(int attachNo);
 
 	int updateBoard(Board board);
 

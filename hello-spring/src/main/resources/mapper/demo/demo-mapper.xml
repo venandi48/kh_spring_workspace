@@ -68,5 +68,14 @@
 		where
 			no = #{no}
 	</update>
+	
+	<select id="selectOneDevByEmail" resultMap="devMap">
+		select
+			*
+		from
+			dev
+		where
+			email = #{email}
+	</select>
 
 </mapper>

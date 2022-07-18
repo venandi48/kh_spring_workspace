@@ -79,8 +79,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public int deleteAttachments(int attachNo) {
-		return boardDao.deleteAttachments(attachNo);
+	public int deleteAttachment(int attachNo) {
+		return boardDao.deleteAttachment(attachNo);
 	}
 	
 	@Override

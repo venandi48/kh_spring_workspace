@@ -16,4 +16,6 @@ public interface DemoDao {
 
 	int updateDev(Dev dev);
 
+	Dev selectOneDevByEmail(String email);
+
 }

@@ -27,7 +27,8 @@ div#board-container label.custom-file-label{text-align:left;}
 	<c:if test="${not empty board.attachments}">
 		<c:forEach items="${board.attachments}" var="attach" varStatus="vs">
 			<button type="button" 
-					class="btn btn-outline-success btn-block">
+					class="btn btn-outline-success btn-block attach"
+					value="${attach.no}">
 				첨부파일${vs.count} - ${attach.originalFilename}
 			</button>
 		</c:forEach>
@@ -38,7 +39,7 @@ div#board-container label.custom-file-label{text-align:left;}
     <input type="number" class="form-control" name="readCount" title="조회수"
 		   value="${board.readCount}" readonly>
 	<input type="datetime-local" class="form-control" name="created_at" 
-		   value='${board.createdAt}'>
+		   value='${board.createdAt}' readonly>
 
 	<c:if test="${not empty loginMember && loginMember.memberId eq board.memberId}">
 		<button type="button"
@@ -48,4 +49,13 @@ div#board-container label.custom-file-label{text-align:left;}
 		</button>
 	</c:if>
 </div>
+<script>
+document.querySelectorAll(".attach").forEach((btn) => {
+	btn.addEventListener('click', (e) => {
+		const attachNo = e.target.value;
+		// console.log(attachNo);
+		location.href = `${pageContext.request.contextPath}/board/fileDownload.do?no=\${attachNo}`;
+	});
+});
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

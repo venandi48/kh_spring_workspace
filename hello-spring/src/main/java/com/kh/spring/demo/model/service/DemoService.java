@@ -16,4 +16,6 @@ public interface DemoService {
 
 	int updateDev(Dev dev);
 
+	Dev selectOneDevByEmail(String email);
+
 }

@@ -38,4 +38,9 @@ public class DemoDaoImpl implements DemoDao {
 	public int updateDev(Dev dev) {
 		return sqlSession.update("demo.updateDev", dev);
 	}
+	
+	@Override
+	public Dev selectOneDevByEmail(String email) {
+		return sqlSession.selectOne("demo.selectOneDevByEmail", email);
+	}
 }
