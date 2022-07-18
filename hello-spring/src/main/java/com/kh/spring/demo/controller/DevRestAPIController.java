@@ -1,5 +1,6 @@
 package com.kh.spring.demo.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,5 +118,35 @@ public class DevRestAPIController {
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.body(dev);
+	}
+	
+	
+	@GetMapping("/lang/{lang}")
+	public ResponseEntity<?> dev2(@PathVariable String lang) {
+		List<Dev> list = new ArrayList<>();
+		try {
+			List<Dev> allDev = demoService.selectDevList();
+			for(Dev dev : allDev) {
+				String[] langs = dev.getLang();
+				for(String langOne : langs) {
+					if(langOne.equals(lang)) {
+						list.add(dev);
+						break;
+					}
+				}
+			}
+			log.debug("list = {}", list);
+		} catch (DevNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (Exception e) {
+			log.error("lang 사용가능 Dev 목록 조회 오류", e);
+			Map<String, Object> map = new HashMap<>();
+			map.put("msg", "lang 사용가능 Dev 목록 조회 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.body(list);
 	}
 }
