@@ -1,8 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<!-- #9.2 bcryptPasswordEncoder빈 등록 -->
-	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-</beans>
+	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<!-- #9.4. 인증/권한 설정 -->
+	<!-- static자원은 security filter처리하지 않음 -->
+	<http security="none" pattern="/resources/**" />
+	
+	<http auto-config="true">
+		<intercept-url pattern="/" access="permitAll"/>
+		<intercept-url pattern="/index.jsp" access="permitAll"/>
+		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/memberLogin.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
+		<intercept-url pattern="/board/boardList.do" access="permitAll"/>
+		<intercept-url pattern="/board/boardDetail.do" access="permitAll"/>
+		<intercept-url pattern="/**" access="isAuthenticated()"/>
+		
+		<!-- 
+			login-page GET방식 로그인 폼페이지 요청(핸들러 작성필요)
+			login-processing-url POST방식 로그인처리 요청(핸들러 작성 불필요)
+		 -->
+		<form-login
+			login-page="/member/memberLogin.do"
+			login-processing-url="/member/memberLogin.do"
+			username-parameter="memberId"
+			password-parameter="password"/>
+		
+		<!-- 
+			logout-url logout요청 (핸들러 작성 불필요)
+		 -->
+		<logout
+			logout-url="/member/memberLogout.do"
+			logout-success-url="/"/>
+		
+		<!-- 
+			disabled="true" : csrf공격 대비 기능 사용안함
+			disabled="false" : csrf공격 대비 기능 사용(기본값)
+			
+			csrf : cross site request forgery공격. 악성코드를 통해 권한있는 사용자의 폼제출 유도
+			모든 POST방식의 폼제출에 csrf공격을 대비해 토큰을 검증
+		 -->
+		<csrf disabled="false"/>
+	</http>
+	
+	<authentication-manager>
+	<!-- 
+		<authentication-provider>
+			<password-encoder ref="bcryptPasswordEncoder"/>
+			<user-service>
+				<user 
+					name="honggd" 
+					password="$2a$10$.eu3p.QmAQtq08IJPZuAJOacnGuqPvk6mTrC1gR8cXY8hNDUBru6q"
+					authorities="ROLE_USER" />
+				<user 
+					name="sinsa" 
+					password="$2a$10$.eu3p.QmAQtq08IJPZuAJOacnGuqPvk6mTrC1gR8cXY8hNDUBru6q"
+					authorities="ROLE_USER, ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	 -->
+		<authentication-provider user-service-ref="securityService">
+			<password-encoder ref="bcryptPasswordEncoder"/>
+		</authentication-provider>
+	</authentication-manager>
+	
+	<context:component-scan base-package="com.kh.security" />
+	
+</beans:beans>

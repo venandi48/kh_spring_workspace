@@ -1,6 +1,7 @@
 package com.kh.spring.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.spring.demo.model.dto.Dev;
 import com.kh.spring.demo.model.exception.DevNotFoundException;
@@ -45,6 +47,7 @@ public class DevRestAPIController {
 	 * ResponseEntity<T>
 	 *  - body에 작성할 자바타입
 	 */
+	// 방법1
 	@GetMapping
 	public ResponseEntity<?> dev() {
 		List<Dev> list = null;
@@ -59,6 +62,24 @@ public class DevRestAPIController {
 		}
 		return ResponseEntity.ok(list);
 	}
+	
+	// 방법2
+//	@GetMapping
+	@ResponseBody
+	public Object _dev() {
+		List<Dev> list = null;
+		try {
+			list = demoService.selectDevList();
+			log.debug("list = {}", list);
+		} catch (Exception e) {
+			log.error("Dev 목록 조회 오류", e);
+			Map<String, Object> map = new HashMap<>();
+			map.put("msg", "Dev 목록 조회 오류");
+			return map;
+		}
+		return list;
+	}
+	
 	
 	@GetMapping("/{no}")
 	public ResponseEntity<?> dev(@PathVariable int no) {
@@ -124,15 +145,17 @@ public class DevRestAPIController {
 	@GetMapping("/lang/{lang}")
 	public ResponseEntity<?> dev2(@PathVariable String lang) {
 		List<Dev> list = new ArrayList<>();
+		lang = lang.toLowerCase();
 		try {
 			List<Dev> allDev = demoService.selectDevList();
 			for(Dev dev : allDev) {
 				String[] langs = dev.getLang();
-				for(String langOne : langs) {
-					if(langOne.equals(lang)) {
-						list.add(dev);
-						break;
-					}
+				List<String> langList = new ArrayList<>();
+				for(String _lang : langs)
+					langList.add(_lang.toLowerCase());
+				
+				if(langList.contains(lang)) {
+					list.add(dev);
 				}
 			}
 			log.debug("list = {}", list);

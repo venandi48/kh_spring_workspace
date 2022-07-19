@@ -46,6 +46,7 @@
 		<beans:property name="order" value="1"/> <!-- InternalResourceViewResolver보다 우선처리 -->
 	</beans:bean>
 	
+	<!-- @Component 클래스를 빈으로 등록 -->
 	<context:component-scan base-package="com.kh.spring" />
 	
 	<!-- #10. interceptor 등록 -->
@@ -54,6 +55,7 @@
 			<mapping path="/**" />
 			<beans:bean class="com.kh.spring.common.interceptor.LoggerInterceptor"></beans:bean>
 		</interceptor>
+		<!-- 
 		<interceptor>
 			<mapping path="/member/**" />
 			<mapping path="/board/**" />
@@ -65,6 +67,7 @@
 			<exclude-mapping path="/board/boardDetail.do"/>
 			<beans:bean class="com.kh.spring.common.interceptor.LoginInterceptor"></beans:bean>
 		</interceptor>
+		 -->
 	</interceptors>
 	
 	<!-- #11.2. aop관련 어노테이션 등록처리 -->

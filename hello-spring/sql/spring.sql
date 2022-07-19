@@ -222,3 +222,28 @@ from
         left join attachment a on b.no = a.board_no
 where b.no = 103
 order by b.no desc;
+
+
+
+-- spring-security관련 authority 테이블 생성
+create table authority(
+    member_id varchar2(20),
+    auth varchar2(50),
+    constraint pk_authority primary key(member_id, auth),
+    constraint fk_authority_member_id foreign key(member_id) references member(member_id) on delete cascade
+);
+
+insert into authority values ('abcde', 'ROLE_USER');
+insert into authority values ('qwerty', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_ADMIN');
+insert into authority values ('honggd', 'ROLE_USER');
+insert into authority values ('sinsa', 'ROLE_USER');
+
+select * from authority;
+select * from member;
+
+select *
+from member m join authority a on m.member_id = a.member_id
+where m.member_id = 'admin'
+;

@@ -29,7 +29,7 @@ import com.kh.spring.member.model.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
+//@Controller
 @RequestMapping("/member")
 @Slf4j
 @SessionAttributes({"loginMember", "next"})
@@ -221,7 +221,7 @@ public class MemberController {
 	public ResponseEntity<?> checkIdDuplicate3(@RequestParam String memberId) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			if(true) throw new RuntimeException("중복아이디 체크 오류!");
+			//if(true) throw new RuntimeException("중복아이디 체크 오류!");
 				
 			Member member = memberService.selectOneMember(memberId);
 			boolean available = member == null;
