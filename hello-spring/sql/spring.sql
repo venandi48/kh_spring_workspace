@@ -240,10 +240,24 @@ insert into authority values ('admin', 'ROLE_ADMIN');
 insert into authority values ('honggd', 'ROLE_USER');
 insert into authority values ('sinsa', 'ROLE_USER');
 
+commit;
+
 select * from authority;
 select * from member;
 
 select *
 from member m join authority a on m.member_id = a.member_id
-where m.member_id = 'admin'
-;
+where m.member_id = 'admin';
+
+
+-- bcrypt 비밀번호 수정
+update member set password = '$2a$10$.eu3p.QmAQtq08IJPZuAJOacnGuqPvk6mTrC1gR8cXY8hNDUBru6q' where password = '1234';
+
+
+-- remember-me테이블
+create table persistent_logins (
+    username varchar(64) not null, 
+    series varchar(64) primary key, 
+    token varchar(64) not null, --username, password, expiry time을 hashing한 값
+    last_used timestamp not null
+);
