@@ -78,4 +78,21 @@ public class MenuController {
 		}
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> selectOne(@PathVariable int id) {
+		Menu menu = null;
+		try {
+			menu = menuService.selectOne(id);
+			
+			if(menu == null)
+				return ResponseEntity.status(404).body(menu);
+		} catch (Exception e) {
+			log.error("메뉴 조회 오류!", e);
+			Map<String, Object> map = new HashMap<>();
+			map.put("msg", "메뉴 조회 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(menu);
+	}
+	
 }

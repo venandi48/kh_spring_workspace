@@ -25,4 +25,7 @@ public interface MenuDao {
 	@Insert("insert into menu values(seq_menu_id.nextval, #{restaurant}, #{name}, #{price}, #{type}, #{taste})")
 	int insertMenu(Menu menu);
 
+	@Select("select * from menu where id = #{id}")
+	Menu selectOne(int id);
+
 }

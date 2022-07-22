@@ -37,4 +37,9 @@ public class MenuServiceImpl implements MenuService {
 	public int insertMenu(Menu menu) {
 		return menuDao.insertMenu(menu);
 	}
+	
+	@Override
+	public Menu selectOne(int id) {
+		return menuDao.selectOne(id);
+	}
 }
