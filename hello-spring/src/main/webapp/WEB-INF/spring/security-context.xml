@@ -28,6 +28,7 @@
 		<!-- 
 			login-page GET방식 로그인 폼페이지 요청(핸들러 작성필요)
 			login-processing-url POST방식 로그인처리 요청(핸들러 작성 불필요)
+			authentication-success-forward-url 핸들러를 연결
 		 -->
 		<form-login
 			login-page="/member/memberLogin.do"
@@ -37,6 +38,7 @@
 		
 		<!-- 
 			logout-url logout요청 (핸들러 작성 불필요)
+			success-handler-ref 로그아웃 성공시 후처리
 		 -->
 		<logout
 			logout-url="/member/memberLogout.do"
