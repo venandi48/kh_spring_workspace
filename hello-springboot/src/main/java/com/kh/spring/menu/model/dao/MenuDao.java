@@ -2,9 +2,11 @@ package com.kh.spring.menu.model.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.spring.menu.model.dto.Menu;
 import com.kh.spring.menu.model.dto.Taste;
@@ -26,6 +28,14 @@ public interface MenuDao {
 	int insertMenu(Menu menu);
 
 	@Select("select * from menu where id = #{id}")
-	Menu selectOne(int id);
+	Menu selectOneMenu(int id);
+
+	@Update("update menu "
+			+ "set restaurant = #{restaurant}, name = #{name}, price = #{price}, type = #{type}, taste = #{taste} "
+			+ "where id = #{id}")
+	int updateMenu(Menu menu);
+
+	@Delete("delete from menu where id = #{id}")
+	int deleteMenu(int id);
 
 }

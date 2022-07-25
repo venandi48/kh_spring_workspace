@@ -23,9 +23,34 @@
         </div>
         <div class="result" id="menus-result"></div>
         <script>
+        const MENU_URL = 'http://localhost:10000/springboot'
+        
+        /**
+         * origin : protocol + host + port
+         * 	- protocol : http:// https://
+         * 	- host : domain, ip
+         * 	- port : 9090
+         *
+         * SOP(Same Origin Policy)
+         * 	- 동일근원정책
+         *  - 웹브라우저에서 비동기요청(ajax)을 보낼 때 반드시 같은 origin으로만 요청을 보낼 수 있다.
+         * 	- http://localhost:9090 -> http://localhost:1000 요청 보낼 수 없음.
+         *
+         *
+         * CORS Policy(Cross Origin Resource Sharing Policy)
+         *  - sop를 넘어서는 ajax요청을 위한 정책
+         * 	- Access-Control-Allow-Origin 헤더에 해당 origin이 명시되어있어야 한다.
+         *
+         * CORS처리
+         * 1. Access-Control-Allow-Origin : 헤더에 origin 명시
+         * 2. jsonp : 보안취약점 발견으로 사용하지 않는걸 추천
+         * 3. proxy server
+         *
+         */
+        
         document.querySelector("#btn-menus").addEventListener('click', (e) => {
         	$.ajax({
-        		url : "${pageContext.request.contextPath}/menu",
+        		url : `\${MENU_URL}/menu`,
         		method : "GET",
         		success(data) {
         			console.log(data);
@@ -122,7 +147,8 @@
         	console.log(selected);
         	
         	$.ajax({
-        		url : `${pageContext.request.contextPath}/menu/type\${selected}`,
+        		url : `${pageContext.request.contextPath}/menu/selectMenuByType.do`,
+        		data : { type : selected },
         		method : "GET",
         		success(data) {
         			console.log(data);
@@ -150,7 +176,8 @@
 				const checked = e.target.value; 
 
 				$.ajax({
-					url : `${pageContext.request.contextPath}/menu/taste/\${checked}`,
+					url : `${pageContext.request.contextPath}/menu/selectMenuByTaste.do`,
+					data : { taste : checked },
 					method : "GET",
 					success(data) {
 						console.log(data);
@@ -211,11 +238,16 @@
 
 			console.log(menu);
 			console.log(JSON.stringify(menu));
+			
+			const headers = {
+				'${_csrf.headerName}' : '${_csrf.token}'
+			}
 
 			// POST /menu 등록 insert
 			$.ajax({
-				url : '${pageContext.request.contextPath}/menu',
+				url : `${pageContext.request.contextPath}/menu/insertMenu.do`,
 				method : "POST",
+				headers,
 				data : JSON.stringify(menu),
 				contentType : 'application/json; charset=utf-8',
 				success(response) {
@@ -279,7 +311,7 @@
 			
 			// PUT방식 : 수정
 			$.ajax({
-				url : `${pageContext.request.contextPath}/menu`,
+				url : `\${MENU_URL}/menu`,
 				method : "PUT",
 				data : JSON.stringify(menu),
 				contentType : 'application/json; charset=utf-8',
@@ -302,7 +334,7 @@
 			if(!menuId) return;
 			
 			$.ajax({
-				url : `${pageContext.request.contextPath}/menu/\${menuId}`,
+				url : `\${MENU_URL}/menu/\${menuId}`,
         		method : "GET",
         		success(data) {
         			console.log(data);
@@ -342,7 +374,7 @@
 			if(!id) return;
 			
 			$.ajax({
-				url : `${pageContext.request.contextPath}/menu/\${id}`,
+				url : `\${MENU_URL}/menu/\${id}`,
 				method : "DELETE",
 				success(response) {
 					console.log(response);

@@ -12,7 +12,7 @@ import com.kh.spring.menu.model.dto.Taste;
 import com.kh.spring.menu.model.dto.Type;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class MenuServiceImpl implements MenuService {
 
 	@Autowired
@@ -39,7 +39,18 @@ public class MenuServiceImpl implements MenuService {
 	}
 	
 	@Override
-	public Menu selectOne(int id) {
-		return menuDao.selectOne(id);
+	public Menu selectOneMenu(int id) {
+		return menuDao.selectOneMenu(id);
 	}
+	
+	@Override
+	public int updateMenu(Menu menu) {
+		return menuDao.updateMenu(menu);
+	}
+	
+	@Override
+	public int deleteMenu(int id) {
+		return menuDao.deleteMenu(id);
+	}
+	
 }

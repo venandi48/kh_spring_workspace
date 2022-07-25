@@ -17,10 +17,13 @@
 	<http auto-config="true">
 		<intercept-url pattern="/" access="permitAll"/>
 		<intercept-url pattern="/index.jsp" access="permitAll"/>
-		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
 		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberLogin.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
+		
+		<intercept-url pattern="/menu/**" access="permitAll"/>
+		
+		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
 		<intercept-url pattern="/board/boardList.do" access="permitAll"/>
 		<intercept-url pattern="/board/boardDetail.do" access="permitAll"/>
 		<intercept-url pattern="/**" access="isAuthenticated()"/>

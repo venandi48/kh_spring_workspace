@@ -16,6 +16,10 @@ public interface MenuService {
 
 	int insertMenu(Menu menu);
 
-	Menu selectOne(int id);
+	Menu selectOneMenu(int id);
+
+	int updateMenu(Menu menu);
+
+	int deleteMenu(int id);
 
 }
