@@ -307,3 +307,47 @@ select
 from
     menu;
 
+
+
+-- 채팅 기능구현
+create table chat_member(
+    chatroom_id varchar2(50),
+    member_id varchar2(50),
+    last_check number default 0, -- 유닉스초로 관리
+    created_at date default sysdate,
+    deleted_at date, -- 채팅방 나간 시간
+    constraint pk_chat_member primary key(chatroom_id, member_id)
+);
+
+create table chat_log (
+    no number,
+    chatroom_id varchar2(50),
+    member_id varchar2(50),
+    msg varchar2(4000),
+    time number,
+    constraint pk_chat_log_no primary key(no),
+    constraint fk_chat_log foreign key(chatroom_id, member_id) references chat_member(chatroom_id, member_id)
+);
+
+create sequence seq_chat_log_no;
+
+select * from chat_member;
+select * from chat_log order by time;
+
+insert into chat_log values (seq_chat_log_no.nextval,'S658069H', 'admin', '안녕하세요', '1658974834858');
+insert into chat_log values (seq_chat_log_no.nextval,'S658069H', 'admin', '왜 웃으세요?', '1658975436728');
+insert into chat_log values (seq_chat_log_no.nextval,'fy9l3094', 'admin', '뭔가요?', '1658977563525');
+insert into chat_log values (seq_chat_log_no.nextval,'Gc3L597M', 'admin', '김사랑씨인걸로 아는데', '1658977677720');
+commit;
+
+-- 관리자 채팅목록 조회
+select 
+    *
+from 
+    (select 
+        row_number() over(partition by cl.chatroom_id order by time desc) rnum , 
+        cl.*   
+    from 
+        chat_log  cl)
+where
+     row_num = 1;
