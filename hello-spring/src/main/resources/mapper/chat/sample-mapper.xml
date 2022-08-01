@@ -10,7 +10,8 @@
 			chatroom_id, 
 			(select member_id from chat_member where chatroom_id = cl.chatroom_id and member_id != 'admin') member_id, 
 			msg, 
-			time
+			time,
+			(select count(*) from chat_log where chatroom_id = cl.chatroom_id and time > (select last_check from chat_member where chatroom_id = cl.chatroom_id and member_id = 'admin')) unread_count
 		from
 			( select 
 				cl.*, 
@@ -19,6 +20,16 @@
 		where rnum = 1
 		order by
 			time desc
+	</select>
+	
+	<select id="getUnreadCount" resultType="_int">
+		select count(*) 
+		from chat_log 
+		where
+			chatroom_id = #{chatroomId}
+			and time > ( select last_check 
+						from chat_member 
+						where chatroom_id = #{chatroomId} and member_id = #{memberId})
 	</select>
 	
 </mapper>

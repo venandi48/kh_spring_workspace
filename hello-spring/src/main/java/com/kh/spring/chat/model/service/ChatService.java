@@ -18,4 +18,8 @@ public interface ChatService {
 
 	List<ChatLog> findRecentChatLogList();
 
+	int updateLastCheck(Map<String, Object> payload);
+
+	int getUnreadCount(ChatMember chatMember);
+
 }

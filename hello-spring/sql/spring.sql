@@ -341,13 +341,64 @@ insert into chat_log values (seq_chat_log_no.nextval,'Gc3L597M', 'admin', '김�
 commit;
 
 -- 관리자 채팅목록 조회
-select 
-    *
-from 
-    (select 
-        row_number() over(partition by cl.chatroom_id order by time desc) rnum , 
-        cl.*   
-    from 
-        chat_log  cl)
-where
-     row_num = 1;
+select
+    no, 
+    chatroom_id, 
+    (select member_id from chat_member where chatroom_id = cl.chatroom_id and member_id != 'admin') member_id, 
+    msg, 
+    time,
+    (select count(*)from chat_log where chatroom_id = cl.chatroom_id and time > (select last_check from chat_member where chatroom_id = cl.chatroom_id and member_id = 'admin')) unread_count
+from
+    ( select 
+        cl.*, 
+        row_number() over(partition by chatroom_id order by time desc) rnum 
+    from chat_log cl) cl 
+where rnum = 1;
+
+
+select count(*)
+from chat_log
+where chatroom_id = 'S658069H'
+    and
+        time > (select last_check from chat_member where chatroom_id = 'S658069H' and member_id = 'admin');
+
+delete from chat_log where member_id = 'qwerty';
+commit;
+
+select
+    no, 
+    chatroom_id, 
+    (select member_id from chat_member where chatroom_id = cl.chatroom_id and member_id != 'admin') member_id, 
+    msg, 
+    time,
+    (select count(*)from chat_log where chatroom_id = cl.chatroom_id and time > (select last_check from chat_member where chatroom_id = cl.chatroom_id and member_id = 'honggd')) unread_count
+from
+    ( select 
+        cl.*, 
+        row_number() over(partition by chatroom_id order by time desc) rnum 
+    from chat_log cl) cl 
+where rnum = 1;
+
+
+select
+    no, 
+    chatroom_id, 
+    (select member_id from chat_member where chatroom_id = cl.chatroom_id and member_id != 'admin') member_id, 
+    msg, 
+    time,
+    (select count(*) from chat_log where chatroom_id = cl.chatroom_id and time > (select last_check from chat_member where chatroom_id = cl.chatroom_id and member_id = 'honggd')) unread_count
+from
+    ( select 
+        cl.*, 
+        row_number() over(partition by chatroom_id order by time desc) rnum 
+    from chat_log cl) cl
+where rnum = 1;
+
+select count(*) 
+from chat_log cl 
+where 
+    chatroom_id = (select chatroom_id from chat_member where member_id = 'love')
+    and time > (select last_check from chat_member where member_id = 'love') 
+    and member_id = 'admin';
+
+select count(*) from chat_log where chatroom_id = '' and time > (select last_check from chat_member where chatroom_id = '' and member_id = '');

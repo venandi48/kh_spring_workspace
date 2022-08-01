@@ -16,8 +16,26 @@ document.querySelector("#sendBtn").addEventListener('click', (e) => {
 	document.querySelector("#msg").value = '';
 });
 
+const lastCheck = () => {
+	console.log('lastCheck!');
+	let payload = {
+		chatroomId,
+		memberId,
+		lastCheck : Date.now(),
+		type : "LAST_CHECK"
+	};
+	
+	stompClient.send("/app/lastCheck", {}, JSON.stringify(payload));
+};
+
+window.addEventListener('focus', (e) => {
+	lastCheck();
+});
+
 setTimeout(() => {
 	const container = document.querySelector('#msg-container');
+	
+	lastCheck();
 	
 	stompClient.subscribe(`/app/chat/${chatroomId}`, (message) => {
 		console.log(`/app/chat/${chatroomId} : `, message);

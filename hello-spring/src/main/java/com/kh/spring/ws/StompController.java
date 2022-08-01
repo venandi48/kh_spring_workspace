@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.kh.spring.chat.model.service.ChatService;
 
@@ -54,5 +55,12 @@ public class StompController {
 		return payload;
 	}
 	
+	@MessageMapping({"/admin/lastCheck", "/lastCheck"})
+	@SendTo("/app/admin/chatList")
+	public Map<String, Object> lastCheck(@RequestBody Map<String, Object> payload) {
+		log.debug("payload = {}", payload);
+		int result = chatService.updateLastCheck(payload);
+		return payload;
+	}
 	
 }

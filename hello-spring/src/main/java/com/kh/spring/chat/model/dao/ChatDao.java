@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.spring.chat.model.dto.ChatLog;
 import com.kh.spring.chat.model.dto.ChatMember;
@@ -26,5 +27,10 @@ public interface ChatDao {
 	List<ChatLog> findChatLogByChatroomId(String chatroomId);
 
 	List<ChatLog> findRecentChatLogList();
+
+	@Update("update chat_member set last_check = #{lastCheck} where chatroom_id = #{chatroomId} and member_id = #{memberId}")
+	int updateLastCheck(Map<String, Object> payload);
+
+	int getUnreadCount(ChatMember chatMember);
 
 }

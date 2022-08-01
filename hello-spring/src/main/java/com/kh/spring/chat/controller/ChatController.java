@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,7 @@ public class ChatController {
 	ChatService chatService;
 
 	@GetMapping("/chat.do")
-	public void chat(@AuthenticationPrincipal Member member, Model model) {
+	public void chat(@AuthenticationPrincipal Member member, HttpSession session, Model model) {
 		String memberId = member.getMemberId();
 		log.debug("memberId = {}", memberId);
 		
@@ -44,6 +46,8 @@ public class ChatController {
 			log.debug("chatLogList = {}", chatLogList);
 			model.addAttribute("chatLogList", chatLogList);
 
+			// session속성 unreadCount 제거
+			session.removeAttribute("unreadCount");
 		} else {
 			// 채팅방에 처음 입장한 경우
 

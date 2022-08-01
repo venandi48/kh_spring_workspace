@@ -67,7 +67,12 @@
                         </div>
 				    </li>
 				    <sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
-				    	<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/chat/chat.do">관리자와1:1채팅</a></li>
+				    	<li class="nav-item">
+				    		<a class="nav-link" href="${pageContext.request.contextPath}/chat/chat.do">
+				    		관리자와1:1채팅
+				    		<span class="badge badge-primary unread-count ${unreadCount == 0 ? 'd-none' : ''}">${unreadCount}</span>
+				    		</a>
+				    	</li>
 				    </sec:authorize>
 				    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/menu/menu.do">Menu</a></li>
 				    <sec:authorize access="hasRole('ADMIN')">

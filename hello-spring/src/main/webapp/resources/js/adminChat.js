@@ -5,6 +5,8 @@ const stompClient = Stomp.over(ws);
 
 stompClient.connect({}, (frame) => {
 	console.log('connect : ', frame);
+	
+	lastCheck();
 
 	const container = document.querySelector('#msg-container');
 
@@ -21,6 +23,22 @@ stompClient.connect({}, (frame) => {
 	});
 
 });
+
+window.addEventListener('focus', (e) => {
+	lastCheck();
+});
+
+const lastCheck = () => {
+	console.log('lastCheck!');
+	let payload = {
+		chatroomId,
+		memberId : 'admin',
+		lastCheck : Date.now(),
+		type : "LAST_CHECK"
+	};
+	
+	stompClient.send("/app/admin/lastCheck", {}, JSON.stringify(payload));
+}
 
 document.querySelector("#sendBtn").addEventListener('click', (e) => {
 	const msg = document.querySelector("#msg").value;

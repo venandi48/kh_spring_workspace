@@ -47,4 +47,13 @@ public class ChatServiceImpl implements ChatService {
 		return chatDao.findRecentChatLogList();
 	}
 	
+	@Override
+	public int updateLastCheck(Map<String, Object> payload) {
+		return chatDao.updateLastCheck(payload);
+	}
+	
+	@Override
+	public int getUnreadCount(ChatMember chatMember) {
+		return chatDao.getUnreadCount(chatMember);
+	}
 }

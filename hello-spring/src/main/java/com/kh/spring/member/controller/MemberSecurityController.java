@@ -1,7 +1,10 @@
 package com.kh.spring.member.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,15 +14,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.spring.chat.model.dto.ChatMember;
+import com.kh.spring.chat.model.service.ChatService;
 import com.kh.spring.member.model.dto.Member;
 import com.kh.spring.member.model.service.MemberService;
 
@@ -28,10 +36,14 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/member")
 @Slf4j
+// @SessionAttributes({"unreadCount"})
 public class MemberSecurityController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	ChatService chatService;
 	
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -155,5 +167,39 @@ public class MemberSecurityController {
 		
 		return ResponseEntity.ok(map);
 	}
+	
+	/**
+	 * 로그인 성공시 후처리
+	 */
+	@PostMapping("/loginSuccess.do")
+	public String loginSuccess(@AuthenticationPrincipal Member member, HttpSession session, Model model) {
+		log.debug("loginSuccess");
+		
+		// 관리자가 아닌경우에만 안읽은 메세지 수 체크
+		List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) member.getAuthorities();
+		if(!authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+			// 관리자와의 1:1채팅 안읽은 메세지 카운팅
+			String memberId = member.getMemberId();
+			ChatMember chatMember = chatService.findChatMemberByMemberId(memberId);
+			int unreadCount = 0;
+			if(chatMember != null) {
+				unreadCount = chatService.getUnreadCount(chatMember);
+				// 세션스코프에 저장 (리다이렉트이기때문)
+				session.setAttribute("unreadCount", unreadCount);
+			}
+			log.debug("unreadCount = {}", unreadCount);
+		}
+		
+		// security redirect 사용하기
+		SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+		String location = "/";
+		if (savedRequest != null)
+			location = savedRequest.getRedirectUrl();
+
+		log.debug("location = {}", location);
+
+		return "redirect:" + location;
+	}
+	
 	
 }

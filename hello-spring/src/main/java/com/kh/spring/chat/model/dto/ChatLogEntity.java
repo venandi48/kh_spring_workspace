@@ -3,14 +3,16 @@ package com.kh.spring.chat.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper = true)
-public class ChatLog extends ChatLogEntity {
+public class ChatLogEntity {
 
-	private int unreadCount;
-
+	protected int no;
+	protected String chatroomId;
+	protected String memberId;
+	protected String msg;
+	protected long time;
+	
 }
